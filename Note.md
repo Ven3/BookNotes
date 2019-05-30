@@ -70,6 +70,7 @@ LAMP
         WebX: 阿里自己的MVC框架(基于Jakarta Turbine -- Servlet框架包,类似于Struts), 页面模板支持JSP和Velocity, 持久层支持ibatis和hibernate等, 控制层支持EJB和Spring;
         Velocity: velocity是一种基于java的模版引擎(template engine);
         JSP: Java Server Page, 类似于html;
+        JBoss: EJB的容器和服务器, 一般与Tomcat或Jetty一起使用, 
         EJB: Enterprise Java Bean(企业组件模式);
         Spring: Java EE全栈式框架
         ibatis: 数据库持久层框架, 现在叫MyBatis, 通过xml mapper文件映射
@@ -97,7 +98,10 @@ LAMP
 > DBRoute(由行癫开发), 统一处理数据的合并, 排序, 分页等操作, 像使用一个库一样操作两个库  
 > 2005-2006 EJB 替换成 Spring  
 > 2005年, 商品数1663万, PC8931万个, 注册会员1390万, 为了提升速度, 启用**缓存**和**CDN**(内容分发网络)
-> 之后的系统结构
+
+    CDN: 内容分发网络(Content Delivery Network), 就近取资源, 最开始用的CDN是ChinaCache 提供的, 全网处理能力超过500Gbps, 后来换用了淘宝自己的CDN(章文嵩带入搭建), 支撑了800Gbps以上的流量
+
+> 之后的系统结构, 淘宝2.1
 
 <div align=center>
 <img src="imgs/Snipaste-2019-05-29_23-49-49.png" height="300px">
@@ -109,7 +113,42 @@ LAMP
 ### 创造技术
 LAMP(200305-200401) -> Oracle, iSearch(200401-200405) -> Java(200402-200503) -> IOE -> 分库,缓存,CDN(200410-200701)
 
-TFS
+> TFS - 为解决自身图片存储问题而生
+
+2007年之前的图片存储架构
+
+<div align=center>
+<img src="imgs/Snipaste-2019-05-30_23-10-20.png" height="300px">
+</div>
+
+    2007年, Google发布GFS, 淘宝有了借鉴的对象, 之后诞生了TFS(Taobao File System), 2007年06月, TFS正式上线运营, 集群规模200(160G)台, 文件数达到上亿级别, 系统部署存储容量140TB, 实际存储容量50TB, 单台支持随机IOPS(Input/Output Operations Per Second) 200+, 流量为3MB/s
+
+    淘宝对图片存储的需求:
+    文件较小; 并发量高; 读大于写; 随机访问; 无修改; 成本低; 能容灾; 能备份; 平滑扩容
+
+> TFS 1.0
+
+<div align=center>
+<img src="imgs/Snipaste-2019-05-30_23-22-20.png" height="400px">
+</div>
+
+    每个Data Server 运行在一台Linux主机上
+    以Block文件的形式存储数据文件(64MB/Block)
+    Block存储多分是为了保证数据安全
+    利用ext3文件系统存放数据文件
+    磁盘raid5做数据冗余
+    文件名内置元数据信息, 用户自己保存TFS文件名与实际文件的对照关系
+    TFS中, 图片保存的文件名暗藏元数据信息(大小,时间,访问频次,逻辑块号)(为什么微信上传图片后会改变名称??)
+
+**<div align=center>业务满足不了的时候, 技术必须创新, 技术创新之后, 业务有了更大的发展空间</div>**
+
+> 2009年06月, TFS 1.3发布, PC服务器增至440(300B)+30(600B)台, 文件数达百亿级别, 系统部署存储容量1800TB; 实际存储容量995TB; 单台随机IOPS 900+, 流量 15MB+
+
+> TFS1.3 结构图
+<div align=center>
+<img src="imgs/Snipaste-2019-05-30_23-46-11.png" height="400px">
+</div>
+
 
 ### 分布式时代
 
