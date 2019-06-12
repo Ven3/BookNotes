@@ -178,6 +178,16 @@ LAMP(200305-200401) -> Oracle, iSearch(200401-200405) -> Java(200402-200503) -> 
     prototype: JS类库, 能够帮助开发人员轻松建立有交互性良好的web2.0特性富客户端页面。
 
 
+    淘宝先是采用ESI(Edge Side Includes)作为缓存, 并且, Oracle Web Cache也支持ESI, 所以决定用ESI作为缓存
+    TBstore: 多隆写的一个缓存系统, 一个分布式的基于Berkeley DB的缓存系统;
+    推出之后，在阿里巴巴集团 内部使用非常广泛，特别是对于淘宝，TBstore上应用了ESI（就是 上面说过的那个ESI）、Checkcode（验证码）、Description（前文 说过的商品详情）、Story（心情故事，商品信息里面的一个大字 段，长度仅次于商品详情）、用户信息等内容。
+
+> TBstore实现
+
+    根据保存的Key（关键字），对key进行Hash算法，取得Hash值，再对Hash值与总Cache服务器数据取模。然后根据取模后的值，找到服务器列表中下标为此值的 Cache服务器。由Java Client API封装实现，应用无须关心。
+    TBstore基于Berkeley DB, Berkeley DB数据量超过内存的时候, 就要往磁盘上写数据, 它是可以做持久化存储的, 一旦写入磁盘, 作为缓存的性能就会大幅度下降。
+
+
 
 
 ### 分布式时代
