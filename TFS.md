@@ -1,3 +1,0 @@
-# TFS
-
-TaoBao File System
